@@ -93,3 +93,12 @@ function foundation_reveal_widget(){
 	register_widget('foundationReveal');
 }
 add_action('widgets_init','foundation_reveal_widget');
+//-----------------JAVASCRIPT EKLEME-----------------------------------//
+function my_custom_scripts() {
+    //reveal-foundation javascript kodlarını içeren js dosyası
+    wp_enqueue_script( 'appc27b', get_stylesheet_directory_uri() . '/dist/assets/js/appc27b.js', array( 'jquery' ),'',true );
+    
+}
+add_action( 'wp_enqueue_scripts', 'my_custom_scripts' );
+
+#######################################################
