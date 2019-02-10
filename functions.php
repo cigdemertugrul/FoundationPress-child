@@ -102,3 +102,47 @@ function my_custom_scripts() {
 add_action( 'wp_enqueue_scripts', 'my_custom_scripts' );
 
 #######################################################
+
+//--------------TUM YAZILARI LİSTELEME VE SAYFALAMA--------------------/
+function sayfalama()
+{ echo  "<ul>";
+query_posts(array('posts_per_page' => 50,'cat' => 1, 'paged' => get_query_var('paged')));
+while(have_posts()) : the_post();?>
+  <li><a href="<?php the_permalink(); ?>"><?php the_title(); ?></a></li>
+
+<?php endwhile; ?></ul>
+<?php 
+  $pages = '';
+  $range = 3;
+    $showitems = ($range * 2)+1;
+    global $paged;
+    if(empty($paged)) $paged = 1;
+    if($pages == '')
+    {
+        global $wp_query;
+        $pages = $wp_query->max_num_pages;
+        
+        if(!$pages)
+        {
+            $pages = 1;
+        }
+    }
+    if(1 != $pages)
+    {
+        echo "<ul class='pagination text-center' role='navigation' aria-label='Pagination'>";        
+        if($paged > 2 && $paged > $range+1 && $showitems < $pages) echo "<li><a class='prev' href='".get_pagenum_link(1)."'>«</a></li>";
+        if($paged > 1 && $showitems < $pages) echo "<li><a href='".get_pagenum_link($paged - 1)."'>&laquo;</a></li>";
+        for ($i=1; $i <= $pages; $i++)
+        {
+            if (1 != $pages &&( !($i >= $paged+$range+1 || $i <= $paged-$range-1) || $pages <= $showitems ))
+            {
+                echo ($paged == $i)? "<li><span class='current' aria-current='page'>".$i."</span></li>":"<li><a href='".get_pagenum_link($i)."'  >".$i."</a></li>";
+            }
+        }
+       if ($paged < $pages && $showitems < $pages) echo "<li><a class='next' href='".get_pagenum_link($paged + 1)."'>«</a></li>";
+        if ($paged < $pages-1 &&  $paged+$range-1 < $pages && $showitems < $pages) echo "<li><a href='".get_pagenum_link($pages)."'>«</a></li>";
+        echo "</ul>";
+    }
+    wp_reset_query();
+}
+//---------------------TÜM YAZILARI LİSTELEME VE SAYFALAMA BİTİŞ------------------------->
